@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Document</title>
+    <script src="http://localhost:8080/socket.js"></script>
+    <script src="https://cdn.staticfile.org/jquery/1.10.2/jquery.min.js"></script>
+    <!-- 搜狐获取ip -->
+    <script src="http://pv.sohu.com/cityjson"></script>
+</head>
+
+<body>
+    <div class="err_box">
+        客户端无法连接服务器
+    </div>
+    <ul class="oul">
+
+    </ul>
+    <textarea name="" class="txt" cols="60" rows="4"></textarea>
+    <input type="button" value="发送" class="inper">
+</body>
+<script>
+    let sock = io.connect('ws://localhost:8080')
+    $(document).ready(function () {
+        sock.on('connect', () => {
+            $('.err_box').hide()
+        })
+        sock.on('disconnect', () => {
+            $('.err_box').show()
+        })
+        $('.inper').click(function () {
+            sock.emit('msg', {
+                val: $('.txt').val(),
+                ip: returnCitySN["cip"]
+            })
+            // $('.oul').append($('<li></li>').text($('.txt').val()))
+        })
+        sock.on('msg', str => {
+            $('.oul').append($('<li></li>').text(str))
+        })
+    })
+
+</script>
+
+</html>
